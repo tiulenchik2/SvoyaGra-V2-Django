@@ -1,0 +1,106 @@
+{
+  "rounds": [
+    {
+      "round_number": 1,
+      "categories": [
+        {
+          "name": "ІТ та Програмування",
+          "questions": [
+            {
+              "price": 100,
+              "type": "standard",
+              "text": "Яка мова програмування названа на честь британського комедійного шоу, а не змії?",
+              "answer": "Python",
+              "image": null,
+              "answer_image": null
+            },
+            {
+              "price": 200,
+              "type": "standard",
+              "text": "Що означає абревіатура HTML?",
+              "answer": "HyperText Markup Language",
+              "image": null,
+              "answer_image": null
+            },
+            {
+              "price": 300,
+              "type": "cat",
+              "text": "Яка компанія створила операційну систему Windows?",
+              "answer": "Microsoft",
+              "image": null,
+              "answer_image": null
+            },
+            {
+              "price": 400,
+              "type": "standard",
+              "text": "Як називається процес пошуку та виправлення помилок у коді?",
+              "answer": "Дебаг (Debugging)",
+              "image": null,
+              "answer_image": null
+            },
+            {
+              "price": 500,
+              "type": "auction",
+              "text": "Хто є творцем ядра Linux та системи Git?",
+              "answer": "Лінус Торвальдс",
+              "image": null,
+              "answer_image": null
+            }
+          ]
+        },
+        {
+          "name": "Загальні знання",
+          "questions": [
+            {
+              "price": 100,
+              "type": "standard",
+              "text": "Скільки континентів на планеті Земля?",
+              "answer": "Сім",
+              "image": null,
+              "answer_image": null
+            },
+            {
+              "price": 200,
+              "type": "standard",
+              "text": "Яка планета Сонячної системи найближча до Сонця?",
+              "answer": "Меркурій",
+              "image": null,
+              "answer_image": null
+            },
+            {
+              "price": 300,
+              "type": "standard",
+              "text": "Яке місто є столицею Японії?",
+              "answer": "Токіо",
+              "image": null,
+              "answer_image": null
+            },
+            {
+              "price": 400,
+              "type": "standard",
+              "text": "Яка хімічна формула води?",
+              "answer": "H2O",
+              "image": null,
+              "answer_image": null
+            },
+            {
+              "price": 500,
+              "type": "standard",
+              "text": "Який хімічний елемент позначається символом Au?",
+              "answer": "Золото",
+              "image": null,
+              "answer_image": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "final": {
+    "category": "Фінал: Історія",
+    "text": "У якому році відбувся реліз першої версії фреймворку Django?",
+    "answer": "У 2005 році",
+    "image": null,
+    "answer_image": null
+  }
+}

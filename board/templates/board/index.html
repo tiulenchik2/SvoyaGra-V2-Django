@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Своя Гра - Екран</title>
+    <link rel="stylesheet" href="{% static 'board/css/style.css' %}"
+</head>
+<body>
+    <div id="board-screen">
+
+    </div>
+    <div id="question-screen" class="hidden">
+        <div class="question-content">
+            <h1 id="question-text">Текст питання.</h1>
+            <img id="question-image" src="" alt="Зображення до питання" class="hidden" />
+        </div>
+        <div id="timer-container" class="hidden">
+            <div id="timer-bar"></div>
+        </div>
+    </div>
+    {{ questions_data|json_script:"questions-data" }}
+    <script src="{% static 'board/js/script.js' %}"></script>
+</body>
+</html>
