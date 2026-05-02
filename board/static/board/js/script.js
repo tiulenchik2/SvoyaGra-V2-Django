@@ -3,6 +3,12 @@ const gameData = JSON.parse(rawData);
 let playedQuestions = JSON.parse(localStorage.getItem('playedQuestions')) || [];
 let currentRoundIndex = 0;
 let currentQuestion = null;
+let autoTimerTimeout = null;
+
+const timerContainer = document.getElementById('timer-container');
+const timerBar = document.getElementById('timer-bar');
+let countdownInterval = null;
+const TIME_LIMIT = 15;
 
 const boardScreen = document.getElementById('board-screen');
 const questionScreen = document.getElementById('question-screen');
@@ -17,7 +23,7 @@ function initGame() {
     renderBoard();
 }
 let typingInterval = null;
-function typewriterEffect(text, element, speed = 40) {
+function typewriterEffect(text, element, speed = 40, onComplete = null) {
     element.textContent = '';
     if (typingInterval) {
         clearInterval(typingInterval);
@@ -29,8 +35,31 @@ function typewriterEffect(text, element, speed = 40) {
             i++;
         } else {
             clearInterval(typingInterval);
+            typingInterval = null;
+            if (onComplete) { onComplete(); }
         }
     }, speed);
+}
+function startTimer(seconds) {
+    clearInterval(countdownInterval);
+    timerContainer.classList.remove('hidden');
+    timerBar.style.width = '100%';
+
+    let totalMilliseconds = seconds * 1000;
+    let currentMilliseconds = totalMilliseconds;
+    countdownInterval = setInterval(() => {
+        currentMilliseconds -= 100;
+        let percentage = (currentMilliseconds / totalMilliseconds) * 100;
+        timerBar.style.width = percentage + '%';
+        if (currentMilliseconds <= 0) {
+            clearInterval(countdownInterval);
+            timerBar.style.width = '0%';
+        }
+    }, 100);
+}
+function stopTimer() {
+    clearInterval(countdownInterval);
+    timerContainer.classList.add('hidden');
 }
 function renderBoard() {
     boardScreen.innerHTML = '';
@@ -91,7 +120,11 @@ function renderBoard() {
                     specialScreen.classList.remove('hidden');
                 } else {
                     questionScreen.classList.remove('hidden');
-                    typewriterEffect(question.text, questionText);
+                    typewriterEffect(question.text, questionText, 40, () => {
+                        autoTimerTimeout = setTimeout(() => {
+                            startTimer(TIME_LIMIT);
+                        }, 2000);
+                    });
                 }
             });
             rowDiv.appendChild(cellDiv);
@@ -105,13 +138,33 @@ function renderBoard() {
 }
 document.addEventListener('DOMContentLoaded', initGame);
 document.addEventListener('keydown', (event) => {
+    if (event.code === 'Space') {
+        event.preventDefault();
+        if (!questionScreen.classList.contains('hidden')) {
+            if (typingInterval) {
+                clearInterval(typingInterval);
+                typingInterval = null;
+                questionText.textContent = currentQuestion.text;
+                startTimer(TIME_LIMIT);
+            } else if (timerContainer.classList.contains('hidden')) {
+                clearTimeout(autoTimerTimeout);
+                startTimer(TIME_LIMIT);
+            } else { stopTimer(); }
+        }
+    }
     if (event.key === 'Enter') {
         if (!specialScreen.classList.contains('hidden')) {
             specialScreen.classList.add('hidden');
             questionScreen.classList.remove('hidden');
-            typewriterEffect(currentQuestion.text, questionText);
+            typewriterEffect(question.text, questionText, 40, () => {
+                autoTimerTimeout = setTimeout(() => {
+                    startTimer(TIME_LIMIT);
+                }, 2000);
+            });
         } else if (!questionScreen.classList.contains('hidden')) {
             if (typingInterval) clearInterval(typingInterval);
+            clearTimeout(autoTimerTimeout);
+            stopTimer();
             questionScreen.classList.add('hidden');
             answerScreen.classList.remove('hidden');
             answerText.textContent = currentQuestion.answer;
@@ -131,6 +184,8 @@ document.addEventListener('keydown', (event) => {
         }
         else if (!questionScreen.classList.contains('hidden')) {
             if (typingInterval) { clearInterval(typingInterval); }
+            clearTimeout(autoTimerTimeout);
+            stopTimer();
             questionScreen.classList.add('hidden');
             boardScreen.classList.remove('hidden');
         }
