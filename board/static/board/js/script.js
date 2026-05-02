@@ -7,9 +7,13 @@ let currentQuestion = null;
 const boardScreen = document.getElementById('board-screen');
 const questionScreen = document.getElementById('question-screen');
 const questionText = document.getElementById('question-text');
+const answerScreen = document.getElementById('answer-screen');
+const answerText = document.getElementById('answer-text');
+const answerExplanation = document.getElementById('answer-explanation');
+const specialScreen = document.getElementById('special-screen');
+const specialText = document.getElementById('special-text');
 
 function initGame() {
-    console.log("Loaded! Data: ", gameData);
     renderBoard();
 }
 let typingInterval = null;
@@ -78,8 +82,17 @@ function renderBoard() {
                     rightPane.classList.add('hidden');
                 }
                 boardScreen.classList.add('hidden');
-                questionScreen.classList.remove('hidden');
-                typewriterEffect(question.text, questionText);
+                if (question.type === 'cat' || question.type === 'auction') {
+                    if (question.type === 'cat') {
+                        specialText.innerHTML = 'КІТ В<br>МІШКУ!';
+                    } else if (question.type === 'auction') {
+                        specialText.innerHTML = 'ПИТАННЯ<br>АУКЦІОН!';
+                    }
+                    specialScreen.classList.remove('hidden');
+                } else {
+                    questionScreen.classList.remove('hidden');
+                    typewriterEffect(question.text, questionText);
+                }
             });
             rowDiv.appendChild(cellDiv);
         });
@@ -88,17 +101,45 @@ function renderBoard() {
     });
 
     boardScreen.appendChild(gridContainer);
+
 }
 document.addEventListener('DOMContentLoaded', initGame);
 document.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+        if (!specialScreen.classList.contains('hidden')) {
+            specialScreen.classList.add('hidden');
+            questionScreen.classList.remove('hidden');
+            typewriterEffect(currentQuestion.text, questionText);
+        } else if (!questionScreen.classList.contains('hidden')) {
+            if (typingInterval) clearInterval(typingInterval);
+            questionScreen.classList.add('hidden');
+            answerScreen.classList.remove('hidden');
+            answerText.textContent = currentQuestion.answer;
+            if (currentQuestion.explanation) {
+                answerExplanation.textContent = `(${currentQuestion.explanation})`;
+                answerExplanation.classList.remove('hidden');
+            } else {
+                answerExplanation.classList.add('hidden');
+            }
+        }
+    }
+
     if (event.key === 'Escape' || event.key === 'Backspace') {
-        if (!questionScreen.classList.contains('hidden')) {
+        if (!specialScreen.classList.contains('hidden')) {
+            specialScreen.classList.add('hidden');
+            boardScreen.classList.remove('hidden');
+        }
+        else if (!questionScreen.classList.contains('hidden')) {
             if (typingInterval) { clearInterval(typingInterval); }
             questionScreen.classList.add('hidden');
             boardScreen.classList.remove('hidden');
         }
+        else if (!answerScreen.classList.contains('hidden')) {
+            answerScreen.classList.add('hidden');
+            boardScreen.classList.remove('hidden');
+        }
     }
-})
+});
 window.addEventListener('beforeunload', (event) => {
     event.preventDefault();
     event.returnValue = '';

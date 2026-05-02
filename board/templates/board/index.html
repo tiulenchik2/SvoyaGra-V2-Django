@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Своя Гра - Екран</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'board/css/style.css' %}"
+    <link rel="stylesheet" href="{% static 'board/css/style.css' %}">
 </head>
 <body>
     <div id="app-container">
@@ -14,19 +14,32 @@
 
         </div>
         <div id="question-screen" class="hidden">
-            <div id="question-left-pane">
-                <div id="question-header">
-                    <div id="question-category">КАТЕГОРІЯ</div>
-                    <div id="question-price">100</div>
+            <div id="question-split-layout">
+                <div id="question-left-pane">
+                    <div id="question-header">
+                        <div id="question-category">КАТЕГОРІЯ</div>
+                        <div id="question-price">100</div>
+                    </div>
+                    <div id="question-text">Текст питання.</div>
                 </div>
-                <div id="question-text">Текст питання.</div>
+                <div id="question-right-pane" class="hidden">
+                    <img id="question-image" src="" alt="Зображення до питання" />
+                </div>
             </div>
-            <div id="question-right-pane" class="hidden">
-                <img id="question-image" src="" alt="Зображення до питання" class="hidden" />
-            </div>
+            
             <div id="timer-container" class="hidden">
                 <div id="timer-bar"></div>
             </div>
+        </div>
+        <div id="answer-screen" class="hidden">
+            <div id="answer-header">ВІДПОВІДЬ!</div>
+            <div id="answer-content">
+                <div id="answer-text">Відповідь.</div>
+                <div id="answer-explanation" class="hidden">Пояснення.</div>
+            </div>
+        </div>
+        <div id="special-screen" class="hidden">
+            <div id="special-text">Спец<br>категорія!</div>
         </div>
     </div>
     {{ questions_data|json_script:"questions-data" }}

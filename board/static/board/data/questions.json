@@ -12,7 +12,8 @@
               "text": "Яка мова програмування названа на честь британського комедійного шоу, а не змії?",
               "answer": "Python",
               "image": null,
-              "answer_image": null
+              "answer_image": null,
+              "explanation": "Бо я так сказав."
             },
             {
               "price": 200,
@@ -20,7 +21,8 @@
               "text": "Що означає абревіатура HTML?",
               "answer": "HyperText Markup Language",
               "image": null,
-              "answer_image": null
+              "answer_image": null,
+              "explanation":  null
             },
             {
               "price": 300,
@@ -32,7 +34,7 @@
             },
             {
               "price": 400,
-              "type": "standard",
+              "type": "auction",
               "text": "Як називається процес пошуку та виправлення помилок у коді?",
               "answer": "Дебаг (Debugging)",
               "image": null,
@@ -64,7 +66,7 @@
               "type": "standard",
               "text": "Яка планета Сонячної системи найближча до Сонця?",
               "answer": "Меркурій",
-              "image": null,
+              "image": "/media/questions/cat2_q2.jpg",
               "answer_image": null
             },
             {
