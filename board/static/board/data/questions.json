@@ -4,94 +4,50 @@
       "round_number": 1,
       "categories": [
         {
-          "name": "ІТ та Програмування",
+          "name": "КАТЕГОРІЯ 1",
           "questions": [
             {
               "price": 100,
               "type": "standard",
-              "text": "Яка мова програмування названа на честь британського комедійного шоу, а не змії?",
-              "answer": "Python",
-              "image": null,
-              "answer_image": null,
-              "explanation": "Бо я так сказав."
+              "text": "Текст звичайного запитання за 100",
+              "answer": "Відповідь 100"
             },
             {
               "price": 200,
-              "type": "standard",
-              "text": "Що означає абревіатура HTML?",
-              "answer": "HyperText Markup Language",
-              "image": null,
-              "answer_image": null,
-              "explanation":  null
+              "type": "cat",
+              "text": "Текст запитання 'Кіт у мішку' за 200",
+              "answer": "Відповідь 200",
+              "image": "/media/questions/.gitkeep"
             },
             {
               "price": 300,
-              "type": "cat",
-              "text": "Яка компанія створила операційну систему Windows?",
-              "answer": "Microsoft",
-              "image": null,
-              "answer_image": null
-            },
-            {
-              "price": 400,
               "type": "auction",
-              "text": "Як називається процес пошуку та виправлення помилок у коді?",
-              "answer": "Дебаг (Debugging)",
-              "image": null,
-              "answer_image": null
-            },
-            {
-              "price": 500,
-              "type": "auction",
-              "text": "Хто є творцем ядра Linux та системи Git?",
-              "answer": "Лінус Торвальдс",
-              "image": null,
-              "answer_image": null
+              "text": "Текст запитання 'Аукціон' за 300",
+              "answer": "Відповідь 300",
+              "explanation": "Тестове пояснення для відповіді"
             }
           ]
         },
         {
-          "name": "Загальні знання",
+          "name": "КАТЕГОРІЯ 2",
           "questions": [
             {
               "price": 100,
               "type": "standard",
-              "text": "Скільки континентів на планеті Земля?",
-              "answer": "Сім",
-              "image": null,
-              "answer_image": null
+              "text": "Текст запитання за 100 (без картинки і пояснення)",
+              "answer": "Відповідь 100"
             },
             {
               "price": 200,
               "type": "standard",
-              "text": "Яка планета Сонячної системи найближча до Сонця?",
-              "answer": "Меркурій",
-              "image": "/media/questions/cat2_q2.jpg",
-              "answer_image": null
+              "text": "Текст запитання за 200",
+              "answer": "Відповідь 200"
             },
             {
               "price": 300,
               "type": "standard",
-              "text": "Яке місто є столицею Японії?",
-              "answer": "Токіо",
-              "image": null,
-              "answer_image": null
-            },
-            {
-              "price": 400,
-              "type": "standard",
-              "text": "Яка хімічна формула води?",
-              "answer": "H2O",
-              "image": null,
-              "answer_image": null
-            },
-            {
-              "price": 500,
-              "type": "standard",
-              "text": "Який хімічний елемент позначається символом Au?",
-              "answer": "Золото",
-              "image": null,
-              "answer_image": null
+              "text": "Текст запитання за 300",
+              "answer": "Відповідь 300"
             }
           ]
         }
@@ -99,10 +55,8 @@
     }
   ],
   "final": {
-    "category": "Фінал: Історія",
-    "text": "У якому році відбувся реліз першої версії фреймворку Django?",
-    "answer": "У 2005 році",
-    "image": null,
-    "answer_image": null
+    "text": "Текст фінального запитання",
+    "answer": "Відповідь фіналу",
+    "explanation": "Пояснення фінального запитання"
   }
 }

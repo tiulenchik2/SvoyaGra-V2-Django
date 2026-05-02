@@ -4,6 +4,7 @@ let playedQuestions = JSON.parse(localStorage.getItem('playedQuestions')) || [];
 let currentRoundIndex = 0;
 let currentQuestion = null;
 let autoTimerTimeout = null;
+let isFinalRound = false;
 
 const timerContainer = document.getElementById('timer-container');
 const timerBar = document.getElementById('timer-bar');
@@ -18,6 +19,7 @@ const answerText = document.getElementById('answer-text');
 const answerExplanation = document.getElementById('answer-explanation');
 const specialScreen = document.getElementById('special-screen');
 const specialText = document.getElementById('special-text');
+const gameOverScreen = document.getElementById('game-over-screen');
 
 function initGame() {
     renderBoard();
@@ -60,6 +62,19 @@ function startTimer(seconds) {
 function stopTimer() {
     clearInterval(countdownInterval);
     timerContainer.classList.add('hidden');
+}
+function checkRoundComplete() {
+    const currentRound = gameData.rounds[currentRoundIndex];
+    let allPlayed = true;
+    currentRound.categories.forEach((category, catIndex) => {
+        category.questions.forEach((question, qIndex) => {
+            const uniqueId = `${currentRoundIndex}-${catIndex}-${qIndex}`;
+            if (!playedQuestions.includes(uniqueId)) {
+                allPlayed = false;
+            }
+        });
+    });
+    return allPlayed;
 }
 function renderBoard() {
     boardScreen.innerHTML = '';
@@ -111,6 +126,7 @@ function renderBoard() {
                     rightPane.classList.add('hidden');
                 }
                 boardScreen.classList.add('hidden');
+                boardScreen.classList.remove('fade-in-scale-anim');
                 if (question.type === 'cat' || question.type === 'auction') {
                     if (question.type === 'cat') {
                         specialText.innerHTML = 'КІТ В<br>МІШКУ!';
@@ -118,8 +134,12 @@ function renderBoard() {
                         specialText.innerHTML = 'ПИТАННЯ<br>АУКЦІОН!';
                     }
                     specialScreen.classList.remove('hidden');
+                    questionScreen.classList.remove('slide-in-anim');
+                    void questionScreen.offsetWidth;
+                    questionScreen.classList.add('slide-in-anim');
                 } else {
                     questionScreen.classList.remove('hidden');
+                    specialScreen.classList.add('slide-in-anim');
                     typewriterEffect(question.text, questionText, 40, () => {
                         autoTimerTimeout = setTimeout(() => {
                             startTimer(TIME_LIMIT);
@@ -144,6 +164,7 @@ document.addEventListener('keydown', (event) => {
             if (typingInterval) {
                 clearInterval(typingInterval);
                 typingInterval = null;
+                clearTimeout(autoTimerTimeout);
                 questionText.textContent = currentQuestion.text;
                 startTimer(TIME_LIMIT);
             } else if (timerContainer.classList.contains('hidden')) {
@@ -155,18 +176,36 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
         if (!specialScreen.classList.contains('hidden')) {
             specialScreen.classList.add('hidden');
-            questionScreen.classList.remove('hidden');
-            typewriterEffect(question.text, questionText, 40, () => {
-                autoTimerTimeout = setTimeout(() => {
-                    startTimer(TIME_LIMIT);
-                }, 2000);
-            });
-        } else if (!questionScreen.classList.contains('hidden')) {
+            specialScreen.classList.remove('slide-in-anim');
+            if (isFinalRound) {
+                currentQuestion = gameData.final;
+                document.getElementById('question-category').textContent = 'ФІНАЛ';
+                document.getElementById('question-price').textContent = '???';
+                document.getElementById('question-right-pane').classList.add('hidden');
+                document.getElementById('question-image').src = '';
+                questionScreen.classList.remove('hidden');
+                questionScreen.classList.add('slide-in-anim');
+                typewriterEffect(currentQuestion.text, questionText, 40, null);
+            } else {
+                questionScreen.classList.remove('hidden');
+                questionScreen.classList.remove('slide-in-anim');
+                void questionScreen.offsetWidth;
+                questionScreen.classList.add('slide-in-anim');
+                typewriterEffect(currentQuestion.text, questionText, 40, () => {
+                    autoTimerTimeout = setTimeout(() => {
+                        startTimer(TIME_LIMIT);
+                    }, 2000);
+                });
+            }
+        }
+        else if (!questionScreen.classList.contains('hidden')) {
             if (typingInterval) clearInterval(typingInterval);
             clearTimeout(autoTimerTimeout);
             stopTimer();
             questionScreen.classList.add('hidden');
+            questionScreen.classList.remove('slide-in-anim');
             answerScreen.classList.remove('hidden');
+            answerScreen.classList.add('slide-in-anim');
             answerText.textContent = currentQuestion.answer;
             if (currentQuestion.explanation) {
                 answerExplanation.textContent = `(${currentQuestion.explanation})`;
@@ -175,23 +214,54 @@ document.addEventListener('keydown', (event) => {
                 answerExplanation.classList.add('hidden');
             }
         }
+        else if (!answerScreen.classList.contains('hidden') && isFinalRound) {
+            answerScreen.classList.add('hidden');
+            answerScreen.classList.remove('slide-in-anim');
+            gameOverScreen.classList.remove('hidden');
+            gameOverScreen.classList.add('slide-in-anim');
+        }
     }
 
     if (event.key === 'Escape' || event.key === 'Backspace') {
+        let returnedToBoard = false;
         if (!specialScreen.classList.contains('hidden')) {
             specialScreen.classList.add('hidden');
+            specialScreen.classList.remove('slide-in-anim');
             boardScreen.classList.remove('hidden');
+            boardScreen.classList.add('fade-in-scale-anim');
+            returnedToBoard = true;
         }
         else if (!questionScreen.classList.contains('hidden')) {
             if (typingInterval) { clearInterval(typingInterval); }
             clearTimeout(autoTimerTimeout);
             stopTimer();
             questionScreen.classList.add('hidden');
+            questionScreen.classList.remove('slide-in-anim');
             boardScreen.classList.remove('hidden');
+            boardScreen.classList.add('fade-in-scale-anim');
+            returnedToBoard = true;
         }
         else if (!answerScreen.classList.contains('hidden')) {
             answerScreen.classList.add('hidden');
+            answerScreen.classList.remove('slide-in-anim');
             boardScreen.classList.remove('hidden');
+            boardScreen.classList.add('fade-in-scale-anim');
+            returnedToBoard = true;
+        }
+        if (returnedToBoard) {
+            if (checkRoundComplete()) {
+                currentRoundIndex++;
+                if (currentRoundIndex < gameData.rounds.length) {
+                    renderBoard();
+                } else {
+                    isFinalRound = true;
+                    boardScreen.classList.add('hidden');
+                    boardScreen.classList.remove('fade-in-scale-anim');
+                    specialText.innerHTML = 'ФІНАЛЬНИЙ<br>РАУНД';
+                    specialScreen.classList.remove('hidden');
+                    specialScreen.classList.add('slide-in-anim');
+                }
+            }
         }
     }
 });

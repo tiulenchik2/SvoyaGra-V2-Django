@@ -26,7 +26,7 @@
                     <img id="question-image" src="" alt="Зображення до питання" />
                 </div>
             </div>
-            
+
             <div id="timer-container" class="hidden">
                 <div id="timer-bar"></div>
             </div>
@@ -40,6 +40,9 @@
         </div>
         <div id="special-screen" class="hidden">
             <div id="special-text">Спец<br>категорія!</div>
+        </div>
+        <div id="game-over-screen" class="hidden">
+            <div id="game-over-text">ГРУ<br>ЗАВЕРШЕНО!</div>
         </div>
     </div>
     {{ questions_data|json_script:"questions-data" }}
