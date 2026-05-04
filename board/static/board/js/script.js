@@ -2,15 +2,22 @@ const rawData = document.getElementById('questions-data').textContent;
 const gameData = JSON.parse(rawData);
 let playedQuestions = JSON.parse(localStorage.getItem('playedQuestions')) || [];
 let currentRoundIndex = 0;
+let currentIntro = 0; // 0 - Welcome, 1 - Rules, 2 - Qr, 3 - Categories
 let currentQuestion = null;
 let autoTimerTimeout = null;
 let isFinalRound = false;
+let countdownInterval = null;
+
+const TIME_LIMIT = 15; // change if needed
 
 const timerContainer = document.getElementById('timer-container');
 const timerBar = document.getElementById('timer-bar');
-let countdownInterval = null;
-const TIME_LIMIT = 15;
+const introCategoryName = document.getElementById('intro-category');
 
+const introScreen0 = document.getElementById('intro-screen-0');
+const introScreen1 = document.getElementById('intro-screen-1');
+const introScreen2 = document.getElementById('intro-screen-2');
+const introScreen3 = document.getElementById('intro-screen-3');
 const boardScreen = document.getElementById('board-screen');
 const questionScreen = document.getElementById('question-screen');
 const questionText = document.getElementById('question-text');
@@ -21,8 +28,56 @@ const specialScreen = document.getElementById('special-screen');
 const specialText = document.getElementById('special-text');
 const gameOverScreen = document.getElementById('game-over-screen');
 
+function showScreen(screen, animationType = null) {
+    const screens = [
+        introScreen0,
+        introScreen1,
+        introScreen2,
+        introScreen3,
+        boardScreen,
+        questionScreen,
+        answerScreen,
+        specialScreen,
+        gameOverScreen
+    ];
+    screens.forEach(s => {
+        if (s) {
+            s.classList.add('hidden');
+            s.classList.remove('slide-in-anim', 'fade-in-scale-anim');
+        }
+    });
+    if (screen === boardScreen) {
+        document.getElementById('question-right-pane').classList.add('hidden');
+    }
+    void screen.offsetWidth;
+    screen.classList.remove('hidden');
+
+    // Determine animation type automatically
+    let animation = animationType;
+    if (!animation) {
+        animation = (screen === boardScreen) ? 'fade-in-scale-anim' : 'slide-in-anim';
+    }
+    screen.classList.add(animation);
+}
 function initGame() {
+    showScreen(introScreen0);
+}
+// roll categories
+async function runIntro3() {
+    showScreen(introScreen3);
+    const categories = gameData.rounds.flatMap(round =>
+        round.categories.map(cat => cat.name)
+    );
+    for (const catName of categories) {
+        introCategoryName.textContent = cat.name;
+        introScreen3.classList.remove('hidden');
+        await new Promise(r => setTimeout(r, 1000));
+        introScreen3.classList.add('hidden');
+        await new Promise(r => setTimeout(r, 500));
+    }
+
     renderBoard();
+    showScreen(boardScreen);
 }
 let typingInterval = null;
 function typewriterEffect(text, element, speed = 40, onComplete = null) {
@@ -133,13 +188,9 @@ function renderBoard() {
                     } else if (question.type === 'auction') {
                         specialText.innerHTML = 'ПИТАННЯ<br>АУКЦІОН!';
                     }
-                    specialScreen.classList.remove('hidden');
-                    questionScreen.classList.remove('slide-in-anim');
-                    void questionScreen.offsetWidth;
-                    questionScreen.classList.add('slide-in-anim');
+                    showScreen(specialScreen);
                 } else {
-                    questionScreen.classList.remove('hidden');
-                    specialScreen.classList.add('slide-in-anim');
+                    showScreen(questionScreen);
                     typewriterEffect(question.text, questionText, 40, () => {
                         autoTimerTimeout = setTimeout(() => {
                             startTimer(TIME_LIMIT);
@@ -156,7 +207,6 @@ function renderBoard() {
     boardScreen.appendChild(gridContainer);
 
 }
-document.addEventListener('DOMContentLoaded', initGame);
 document.addEventListener('keydown', (event) => {
     if (event.code === 'Space') {
         event.preventDefault();
@@ -183,14 +233,10 @@ document.addEventListener('keydown', (event) => {
                 document.getElementById('question-price').textContent = '???';
                 document.getElementById('question-right-pane').classList.add('hidden');
                 document.getElementById('question-image').src = '';
-                questionScreen.classList.remove('hidden');
-                questionScreen.classList.add('slide-in-anim');
+                showScreen(questionScreen);
                 typewriterEffect(currentQuestion.text, questionText, 40, null);
             } else {
-                questionScreen.classList.remove('hidden');
-                questionScreen.classList.remove('slide-in-anim');
-                void questionScreen.offsetWidth;
-                questionScreen.classList.add('slide-in-anim');
+                showScreen(questionScreen);
                 typewriterEffect(currentQuestion.text, questionText, 40, () => {
                     autoTimerTimeout = setTimeout(() => {
                         startTimer(TIME_LIMIT);
@@ -204,8 +250,7 @@ document.addEventListener('keydown', (event) => {
             stopTimer();
             questionScreen.classList.add('hidden');
             questionScreen.classList.remove('slide-in-anim');
-            answerScreen.classList.remove('hidden');
-            answerScreen.classList.add('slide-in-anim');
+            showScreen(answerScreen);
             answerText.textContent = currentQuestion.answer;
             if (currentQuestion.explanation) {
                 answerExplanation.textContent = `(${currentQuestion.explanation})`;
@@ -217,8 +262,7 @@ document.addEventListener('keydown', (event) => {
         else if (!answerScreen.classList.contains('hidden') && isFinalRound) {
             answerScreen.classList.add('hidden');
             answerScreen.classList.remove('slide-in-anim');
-            gameOverScreen.classList.remove('hidden');
-            gameOverScreen.classList.add('slide-in-anim');
+            showScreen(gameOverScreen);
         }
     }
 
@@ -227,8 +271,7 @@ document.addEventListener('keydown', (event) => {
         if (!specialScreen.classList.contains('hidden')) {
             specialScreen.classList.add('hidden');
             specialScreen.classList.remove('slide-in-anim');
-            boardScreen.classList.remove('hidden');
-            boardScreen.classList.add('fade-in-scale-anim');
+            showScreen(boardScreen);
             returnedToBoard = true;
         }
         else if (!questionScreen.classList.contains('hidden')) {
@@ -237,15 +280,13 @@ document.addEventListener('keydown', (event) => {
             stopTimer();
             questionScreen.classList.add('hidden');
             questionScreen.classList.remove('slide-in-anim');
-            boardScreen.classList.remove('hidden');
-            boardScreen.classList.add('fade-in-scale-anim');
+            showScreen(boardScreen);
             returnedToBoard = true;
         }
         else if (!answerScreen.classList.contains('hidden')) {
             answerScreen.classList.add('hidden');
             answerScreen.classList.remove('slide-in-anim');
-            boardScreen.classList.remove('hidden');
-            boardScreen.classList.add('fade-in-scale-anim');
+            showScreen(boardScreen);
             returnedToBoard = true;
         }
         if (returnedToBoard) {
@@ -258,14 +299,16 @@ document.addEventListener('keydown', (event) => {
                     boardScreen.classList.add('hidden');
                     boardScreen.classList.remove('fade-in-scale-anim');
                     specialText.innerHTML = 'ФІНАЛЬНИЙ<br>РАУНД';
-                    specialScreen.classList.remove('hidden');
-                    specialScreen.classList.add('slide-in-anim');
+                    showScreen(specialScreen);
                 }
             }
         }
     }
+    if (event.shiftKey && event.key === 'R') {
+        if (confirm("Скинути localstorage?")) {
+            localStorage.clear();
+            location.reload();
+        }
+    } 
 });
-window.addEventListener('beforeunload', (event) => {
-    event.preventDefault();
-    event.returnValue = '';
-});
+document.addEventListener('DOMContentLoaded', initGame);

@@ -10,9 +10,31 @@
 </head>
 <body>
     <div id="app-container">
-        <div id="board-screen">
-
+        <div id="intro-screen-0" class="game-screen">
+            <div class="pixel-box">
+                <h1 class="title">Своя<br>Гра</h1>
+            </div>
         </div>
+        <div id="intro-screen-1" class="game-screen hidden">
+            <h2 class="title-small">ЯК ГРАТИ?</h2>
+            <div class="rules-grid">
+                <div class="rule-box">Будь чесним! Без ChatGPT і т.п. :)</div>
+                <div class="rule-box">Відповідай швидко і правильно!</div>
+                <div class="rule-box">Гарно проведи час разом з нами!</div>
+            </div>
+        </div>
+        <div id="intro-screen-2" class="game-screen hidden">
+            <div class="pixel-box">
+                <h2 class="title-small">Але спочатку...</h2>
+                <div class="qr-container">
+                    <img src="/media/qrcode.png" class="qr" alt="QR">
+                </div>
+            </div>
+        </div>
+        <div id="intro-screen-3" class="game-screen hidden">
+            <h2 id="intro-category" class="title">НАЗВА КАТЕГОРІЇ</h2>
+        </div>
+        <div id="board-screen"></div>
         <div id="question-screen" class="hidden">
             <div id="question-split-layout">
                 <div id="question-left-pane">
