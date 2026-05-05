@@ -5,6 +5,7 @@ class Team(models.Model):
     score = models.IntegerField(default=0, verbose_name='Бали')
     is_online = models.BooleanField(default=False, verbose_name='Статус')
     is_banned = models.BooleanField(default=False, verbose_name='Блок')
+    has_buzzed = models.BooleanField(default=False, verbose_name="Натиснута кнопка")
 
     def __str__(self):
         return f"{self.name} ({self.score} балів)"

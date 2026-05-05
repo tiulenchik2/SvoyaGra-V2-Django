@@ -4,6 +4,10 @@ let playedQuestions = JSON.parse(localStorage.getItem('playedQuestions')) || [];
 let currentRoundIndex = Number(localStorage.getItem('currentRoundIndex')) || 0;
 let currentIntro = Number(localStorage.getItem('currentIntro')) || 0;
 // 0 - Welcome, 1 - Rules, 2 - Qr, 3 - Categories
+const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+const gameSocket = new WebSocket(`${protocol}${window.location.host}/ws/game/`);
+gameSocket.onopen = () => console.log("Дошка підключена до сокета");
+gameSocket.onerror = (err) => console.error("Помилка сокета дошки:", err);
 let currentQuestion = null;
 let autoTimerTimeout = null;
 let isFinalRound = false;
@@ -186,6 +190,13 @@ function renderBoard() {
                 cellDiv.style.borderColor = '#000000';
                 playedQuestions.push(uniqueId);
                 localStorage.setItem('playedQuestions', JSON.stringify(playedQuestions));
+                const priceValue = parseInt(question.price);
+                if (gameSocket.readyState === WebSocket.OPEN) {
+                    gameSocket.send(JSON.stringify({
+                        'action': 'set_price',
+                        'price': priceValue
+                    }));
+                }
                 document.getElementById('question-category').textContent = category.name;
                 document.getElementById('question-price').textContent = question.price;
                 if (question.image) {

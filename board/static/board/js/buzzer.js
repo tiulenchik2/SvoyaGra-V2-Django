@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     const socket = new WebSocket(`${protocol}${window.location.host}/ws/game/`);
-    const button = document.getElementById('buzzer-btn');
+    const btn = document.getElementById('buzzer-btn');
 
     socket.onopen = () => {
         console.log('Connected to game');
@@ -13,31 +13,54 @@ document.addEventListener('DOMContentLoaded', () => {
             'team_id': teamId
         }));
     };
+
     function pressBuzzer() {
-        if (!button.disabled) {
-            button.disabled = true;
+        if (!btn.disabled) {
+            btn.disabled = true;
+            btn.innerText = "ГОТОВО!";
             socket.send(JSON.stringify({
-                'action': 'press_buzzer',
+                'action': 'buzz',
                 'team_id': teamId,
+                'team_name': document.querySelector('h2').innerText
             }));
         }
     }
-    button.addEventListener('touchstart', (e) => {
+
+    btn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         pressBuzzer();
     });
-    button.addEventListener('click', pressBuzzer);
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden') {
-            button.disabled = true;
-            socket.send(JSON.stringify({
-                'action': 'detected',
-                'team_id': teamId,
-            }));
-            alert('Кнопку заблоковано. Якщо вважаєте це за помилку - зверніться до організаторів.');
-        }
-    });
+    btn.addEventListener('click', pressBuzzer);
+
     socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
+
+        if (data.action === 'refresh_data') {
+            window.location.reload();
+        }
+        if (data.action === 'buzz') {
+            if (data.team_id != teamId) {
+                btn.disabled = true;
+                btn.innerText = 'ХТОСЬ ПЕРШИЙ!';
+                btn.style.background = "#444";
+            }
+        }
+
+        if (data.action === 'reset_round' || data.action === 'price_updated') {
+            btn.disabled = false;
+            btn.innerText = "КЛІК";
+            btn.style.background = "#ff66cc";
+        }
+
+        if (data.action === 'update_score') {
+            if (data.team_id == teamId) {
+                const scoreElement = document.getElementById('score');
+                if (scoreElement) {
+                    scoreElement.innerText = data.new_score;
+                    scoreElement.style.color = "#ffffff";
+                    setTimeout(() => scoreElement.style.color = "#ffff00", 300);
+                }
+            }
+        }
     };
 });

@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Адмін-панель</title>
+    <link rel="stylesheet" href="{% static 'board/css/buzzer.css' %}">
+    <link rel="stylesheet" href="{% static 'board/css/admin.css' %}">
+</head>
+<body class="player-screen">
+    <div class="admin-container">
+        <h1>Керування грою</h1>
+        <div id="team-list">
+            {% for team in teams %}
+            <div class="team-row">
+                <div class="teams">
+                    <span class="status-dot {% if team.is_banned %}banned{% elif team.is_online %}online{% else %}offline{% endif %}"></span>
+                    {{ team.name }}: <strong>{{ team.score }}</strong>
+                </div>
+                <div id="action-for-{{ team.id }}" class="team-action-area">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="controls">
+            <h2 id="current-status">Очікування натискання...</h2>
+            <p>Ціна питання: <span id="display-price" style="color: #ffff00;">{{ state.current_price }}</span></p>
+            <button class="btn-admin btn-reset" onclick="resetBuzzer()">СКИДАННЯ БАЗЗЕРА</button>
+        </div>
+    </div>
+
+    <script src="{% static 'board/js/admin.js' %}"></script>
+</body>
+</html>
