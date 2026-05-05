@@ -1,7 +1,7 @@
 const rawData = document.getElementById('questions-data').textContent;
 const gameData = JSON.parse(rawData);
 let playedQuestions = JSON.parse(localStorage.getItem('playedQuestions')) || [];
-let currentRoundIndex = 0;
+let currentRoundIndex = Number(localStorage.getItem('currentRoundIndex')) || 0;
 let currentIntro = Number(localStorage.getItem('currentIntro')) || 0;
 // 0 - Welcome, 1 - Rules, 2 - Qr, 3 - Categories
 let currentQuestion = null;
@@ -56,8 +56,19 @@ function showScreen(screen, animationType = null) {
 }
 function initGame() {
     if (localStorage.getItem('currentIntro') === '3') {
-        renderBoard();
-        showScreen(boardScreen);
+        while (currentRoundIndex < gameData.rounds.length && checkRoundComplete()) {
+            currentRoundIndex++;
+            localStorage.setItem('currentRoundIndex', currentRoundIndex);
+        }
+
+        if (currentRoundIndex >= gameData.rounds.length) {
+            isFinalRound = true;
+            specialText.innerHTML = 'ФІНАЛЬНИЙ<br>РАУНД';
+            showScreen(specialScreen);
+        } else {
+            renderBoard();
+            showScreen(boardScreen);
+        }
     } else {
         localStorage.setItem('currentIntro', 0);
         showScreen(introScreen0);
@@ -310,6 +321,7 @@ document.addEventListener('keydown', (event) => {
         if (returnedToBoard) {
             if (checkRoundComplete()) {
                 currentRoundIndex++;
+                localStorage.setItem('currentRoundIndex', currentRoundIndex);
                 if (currentRoundIndex < gameData.rounds.length) {
                     renderBoard();
                 } else {
