@@ -15,6 +15,14 @@
     </div>
     <div class="buzzer-container">
         <button id="buzzer-btn">КЛІК</button>
+        <div id="final-section">
+            <hr style="border-color: #ff99ff; margin-bottom: 20px;">
+            <h3 style="color: #ffc107; font-family: 'Press Start 2P', cursive; font-size: 1rem;">ФІНАЛ</h3>
+            <input type="text" id="final-answer-input" placeholder="Ваша відповідь..."
+                   style="width: 80%; padding: 15px; font-size: 1.2rem; margin-bottom: 15px; border-radius: 8px; border: 2px solid #ff99ff; background: #222; color: #fff; text-align: center;">
+            <br>
+            <button id="send-final-btn" style="background: #28a745; color: #fff; padding: 15px 30px; font-size: 1.2rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">ВІДПРАВИТИ</button>
+        </div>
     </div>
     <script src="{% static 'board/js/buzzer.js' %}"></script>
 </body>

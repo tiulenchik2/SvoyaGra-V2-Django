@@ -6,8 +6,6 @@ let currentIntro = Number(localStorage.getItem('currentIntro')) || 0;
 // 0 - Welcome, 1 - Rules, 2 - Qr, 3 - Categories
 const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 const gameSocket = new WebSocket(`${protocol}${window.location.host}/ws/game/`);
-gameSocket.onopen = () => console.log("Дошка підключена до сокета");
-gameSocket.onerror = (err) => console.error("Помилка сокета дошки:", err);
 let currentQuestion = null;
 let autoTimerTimeout = null;
 let isFinalRound = false;
@@ -258,6 +256,9 @@ document.addEventListener('keydown', (event) => {
                 document.getElementById('question-price').textContent = '???';
                 document.getElementById('question-right-pane').classList.add('hidden');
                 document.getElementById('question-image').src = '';
+                if (gameSocket && gameSocket.readyState === WebSocket.OPEN) {
+                    gameSocket.send(JSON.stringify({ 'action': 'start_final' }));
+                }
                 showScreen(questionScreen);
                 typewriterEffect(currentQuestion.text, questionText, 40, null);
             } else {

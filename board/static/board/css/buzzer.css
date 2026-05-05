@@ -105,3 +105,9 @@ body.login-screen {
     box-shadow: none;
     transform: scale(0.95);
 }
+#final-section {
+    display: none;
+    margin-top: 30px;
+    text-align: center;
+    width: 100%;
+}

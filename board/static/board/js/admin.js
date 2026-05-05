@@ -35,6 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             document.querySelectorAll('.team-action-area').forEach(div => div.innerHTML = '');
         }
+        if (data.action === 'final_answer_received') {
+            const list = document.getElementById('final-answers-list');
+            const li = document.createElement('li');
+            li.style.cssText = "padding: 15px; border-bottom: 1px solid #444; margin-bottom: 5px; background: rgba(255, 255, 255, 0.05); border-radius: 5px;";
+            li.innerHTML = `<strong style="color: #00ff00;">${data.team_name}:</strong> <span style="color: #fff; font-size: 1.5rem; margin-left: 10px;">${data.answer}</span>`;
+            list.appendChild(li);
+        }
     };
 
     window.resetBuzzer = () => {

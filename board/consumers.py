@@ -42,6 +42,20 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {'type': 'game_message', 'data': {'action': 'reset_round'}}
             )
+        elif action == 'start_final':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {'type': 'game_message', 'data': {'action': 'final_round_start'}}
+            )
+        elif action == 'final_answer':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {'type': 'game_message', 'data': {
+                    'action': 'final_answer_received',
+                    'team_name': data.get('team_name'),
+                    'answer': data.get('answer')
+                }}
+            )
 
         elif action == 'admin_update_score':
             new_score = await self.apply_score(team_id, data.get('status'))

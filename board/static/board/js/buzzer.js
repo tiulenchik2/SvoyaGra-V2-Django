@@ -45,13 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.style.background = "#444";
             }
         }
-
         if (data.action === 'reset_round' || data.action === 'price_updated') {
             btn.disabled = false;
             btn.innerText = "КЛІК";
             btn.style.background = "#ff66cc";
         }
-
         if (data.action === 'update_score') {
             if (data.team_id == teamId) {
                 const scoreElement = document.getElementById('score');
@@ -62,5 +60,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+        if (data.action === 'final_round_start') {
+            document.getElementById('buzzer-btn').style.display = 'none';
+            document.getElementById('final-section').style.display = 'block';
+        }
     };
+    const sendFinalBtn = document.getElementById('send-final-btn');
+    if (sendFinalBtn) {
+        sendFinalBtn.addEventListener('click', () => {
+            const answerInput = document.getElementById('final-answer-input');
+            const val = answerInput.value.trim();
+
+            if (val !== "") {
+                socket.send(JSON.stringify({
+                    'action': 'final_answer',
+                    'team_name': document.querySelector('h2').innerText,
+                    'answer': val
+                }));
+
+                sendFinalBtn.disabled = true;
+                answerInput.disabled = true;
+                sendFinalBtn.innerText = "ВІДПРАВЛЕНО";
+                sendFinalBtn.style.background = "#555";
+            }
+        });
+    }
 });
