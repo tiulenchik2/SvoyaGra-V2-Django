@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Вхід у "Свою гру"</title>
+    <link rel="stylesheet" href="{% static 'board/css/buzzer.css' %}">
+</head>
+<body class="player-screen login-screen">
+    <div class="login-card">
+        <h1 class="login-welcome">Вітаємо у грі!</h1>
+        <p class="login-choose">Оберіть вашу команду зі списку:</p>
+        <form action="{% url 'login_team' %}" method="post">
+            {% csrf_token %}
+            <select name="team_id" required>
+                <option value="" disabled selected>Хто ви?</option>
+                {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Увійти</button>
+        </form>
+    </div>
+</body>
+</html>

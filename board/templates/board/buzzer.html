@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Баззер: {{ team.name }}</title>
+    <link rel="stylesheet" href="{% static 'board/css/buzzer.css' %}">
+</head>
+<body class="player-screen" data-team-id="{{ team.id }}">
+    <div class="buzzer-header">
+        <a href="{% url 'logout_team' %}" class="exit-link">Вихід</a>
+        <h2 class="team-name">{{ team.name }}</h2>
+        <div class="score-display" id="score">{{ team.score }}</div>
+    </div>
+    <div class="buzzer-container">
+        <button id="buzzer-btn">КЛІК</button>
+    </div>
+    <script src="{% static 'board/js/buzzer.js' %}"></script>
+</body>
+</html>

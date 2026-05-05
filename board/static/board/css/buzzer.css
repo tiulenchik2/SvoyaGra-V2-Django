@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+body.player-screen {
+    font-family: 'Press Start 2P', cursive;
+    background-color: #000000;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+body.login-screen {
+    align-items: center;
+    justify-content: center;
+}
+.login-card {
+    background: #000000;
+    padding: 2rem;
+    border-radius: 15px;
+    border: 4px solid #002299;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+}
+.login-welcome,
+.login-choose {
+    color: #ffff00;
+}
+.login-card select,
+.login-card button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 0px;
+    border: none;
+    font-size: 0.8rem;
+    box-sizing: border-box;
+}
+.login-card select {
+    background: #002299;
+    color: #ffffff;
+}
+.login-card button {
+    background: #ff66cc;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+.login-card button:active {
+    transform: scale(0.98);
+}
+.buzzer-header {
+    padding: 70px;
+    text-align: center;
+    background: #000000;
+}
+.team-name {
+    color: #ff66cc;
+}
+.score-display {
+    font-size: 2rem;
+    color: #ffff00;
+    margin: 10px 0;
+}
+.buzzer-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.exit-link {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: #ff66cc;
+    text-decoration: none;
+    font-size: 0.6rem;
+    border: 2px solid #ff66cc;
+    padding: 5px 10px;
+    transition: all 0.2s;
+}
+.exit-link:hover {
+    background: #ff66cc;
+    color: #000;
+}
+#buzzer-btn {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    border: 10px solid #ff99ff;
+    background: #ff66cc;
+    color: #ffffff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    font-weight: bold;
+    box-shadow: 0 0 50px rgba(233, 69, 96, 0.3);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s;
+}
+#buzzer-btn:disabled {
+    background: #444;
+    border-color: #222;
+    box-shadow: none;
+    transform: scale(0.95);
+}
