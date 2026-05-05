@@ -6,6 +6,7 @@ env/
 db.sqlite3
 Thumbs.db
 .vs/
+/board/static/board/data/data_v3.json
 /media/qrcode.png
 /media/*/*
 !/media/**/.gitkeep
